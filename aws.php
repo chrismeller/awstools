@@ -148,15 +148,12 @@
 			
 			$result = $response_dom->getElementsByTagName( $action . 'Result' )->item(0);
 			
-			// if there is an xpath query defined, run it
-			if ( $result_xpath != null ) {
-				$xpath = new DOMXPath( $response_dom );
-				
-				$result = $xpath->query( $result_xpath, $result );
-			}
-			else {
-				// otherwise, just return the result
-				
+			// SimpleXML is drastically easier to get results out of and can be cast as an array directly, so use that
+			$result = simplexml_import_dom( $result );
+			
+			// and remove NextToken if it exists, we pulled it out already
+			if ( isset( $result->NextToken ) ) {
+				unset( $result->NextToken );
 			}
 			
 			$r = new AWS_Response();
@@ -164,7 +161,7 @@
 			$r->box_usage = $box_usage;
 			$r->next_token = $next_token;
 			
-			$r->response = $result;
+			$r->response = (array)$result;
 			
 			$r->response_dom = $response_dom;
 			

@@ -52,7 +52,10 @@
 			$access_key = $request->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
 			
 			//$action = $request->appendChild( new DOMElement( 'Action', $action ) );
-			$max_domains = $request->appendChild( new DOMElement( 'MaxNumberOfDomains', '2' ) );
+			
+			foreach ( $options as $k => $v ) {
+				$request->appendChild( new DOMElement( $k, $v ) );
+			}
 			
 			echo 'REQUEST:' . "\n";
 			echo $dom->saveXML();

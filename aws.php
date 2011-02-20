@@ -25,7 +25,7 @@
 			
 		}
 		
-		protected function request ( $action, $options = array(), $endpoint = null, $xml_namespace = null, $signature_version = 2 ) {
+		protected function request ( $action, $options = array(), $endpoint = null, $xml_namespace = null, $result_xpath = null ) {
 		
 			$dom = new DOMDocument( '1.0', 'utf-8' );
 			$dom->formatOutput = true;
@@ -36,28 +36,21 @@
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
 			
-			//$header = $envelope->appendChild( new DOMElement( 'soapenv:Header', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
-			//$header->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:aws', 'http://security.amazonaws.com/doc/2007-01-01' );
-			
 			$timestamp = gmdate('c');		// GMT, as recommended by Amazon
 			$signature = $this->generate_signature( $action, $timestamp );
-			
-			// append the authentication params and base info
-			//$timestamp = $header->appendChild( new DOMElement( 'Timestamp', $timestamp ) );
-			//$signature = $header->appendChild( new DOMElement( 'Signature', $signature ) );
-			//$access_key = $header->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
-			//$version = $request->appendChild( new DOMElement( 'Version', $this->api_version ) );
 			
 			$body = $envelope->appendChild( new DOMElement( 'soapenv:Body', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
 			
 			$request = $body->appendChild( new DOMElement( $action, '', $xml_namespace ) );
+			
+			// add all the authentication info for the request
 			$timestamp = $request->appendChild( new DOMElement( 'Timestamp', $timestamp ) );
 			$signature = $request->appendChild( new DOMElement( 'Signature', $signature ) );
 			$version = $request->appendChild( new DOMElement( 'Version', $this->api_version ) );
-			
 			$access_key = $request->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
+			
 			//$action = $request->appendChild( new DOMElement( 'Action', $action ) );
-			$max_domains = $request->appendChild( new DOMElement( 'MaxNumberOfDomains', '5' ) );
+			$max_domains = $request->appendChild( new DOMElement( 'MaxNumberOfDomains', '2' ) );
 			
 			echo 'REQUEST:' . "\n";
 			echo $dom->saveXML();
@@ -134,6 +127,46 @@
 				
 			}
 			
+			// now that we're sure we've got a valid result, parse out the meta data
+			$request_id = $response_dom->getElementsByTagName( 'RequestId' ) ->item(0)->nodeValue;
+			$box_usage = $response_dom->getElementsByTagName( 'BoxUsage' )->item(0)->nodeValue;
+			
+			// see if we have a next token
+			$next_tokens = $response_dom->getElementsByTagName( 'NextToken' );
+			
+			if ( $next_tokens->length > 0 ) {
+				$next_token = $next_tokens->item(0)->nodeValue;
+			}
+			else {
+				$next_token = null;
+			}
+			
+			$result = $response_dom->getElementsByTagName( $action . 'Result' )->item(0);
+			
+			// if there is an xpath query defined, run it
+			if ( $result_xpath != null ) {
+				$xpath = new DOMXPath( $response_dom );
+				
+				$result = $xpath->query( $result_xpath, $result );
+			}
+			else {
+				// otherwise, just return the result
+				
+			}
+			
+			$r = new AWS_Response();
+			$r->request_id = $request_id;
+			$r->box_usage = $box_usage;
+			$r->next_token = $next_token;
+			
+			$r->response = $result;
+			
+			$r->response_dom = $response_dom;
+			
+			print_r($r);
+			
+			return $r;
+			
 		}
 		
 		private function generate_signature ( $action, $timestamp ) {
@@ -144,6 +177,17 @@
 			return base64_encode( $hash );
 			
 		}
+		
+	}
+
+	class AWS_Response {
+		
+		public $request_id;
+		public $box_usage;
+		
+		public $response;
+		
+		public $response_dom;
 		
 	}
 	

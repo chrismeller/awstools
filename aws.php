@@ -11,6 +11,11 @@
 		protected $endpoint;
 		protected $xml_namespace;
 		
+		/**
+		 * @var stores the last AWS_Response object generated.
+		 */
+		public $last_response = null;
+		
 		public function __construct ( $aws_access_key = null, $aws_secret = null ) {
 			
 			// for compatibility with other libraries, accept constants as well
@@ -164,6 +169,8 @@
 			$r->response = (array)$result;
 			
 			$r->response_dom = $response_dom;
+			
+			$this->last_response = $r;
 			
 			print_r($r);
 			

@@ -32,7 +32,7 @@
 			
 			$envelope = $dom->appendChild( new DOMElement( 'soapenv:Envelope', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:soapenv', 'http://schemas.xmlsoap.org/soap/envelope/' );
-			//$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:SOAP-ENC', 'http://http://schemas.xmlsoap.org/soap/encoding/' );
+			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:soapenc', 'http://http://schemas.xmlsoap.org/soap/encoding/' );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
 			
@@ -51,7 +51,8 @@
 			$body = $envelope->appendChild( new DOMElement( 'soapenv:Body', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
 			
 			$request = $body->appendChild( new DOMElement( $action, '', $xml_namespace ) );
-			$action = $request->appendChild( new DOMElement( 'Action', $action ) );
+			//$action = $request->appendChild( new DOMElement( 'Action', $action ) );
+			$max_domains = $request->appendChild( new DOMElement( 'MaxNumberOfDomains', '5' ) );
 			
 			echo $dom->saveXML();
 			

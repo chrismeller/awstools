@@ -10,8 +10,8 @@
 		// define the API version, which is required for all sub-classes
 		protected $api_version = '2009-04-15';
 		
-		private $endpoint = null;
-		private $xml_namespace = 'http://sdb.amazonaws.com/doc/2009-04-15';
+		protected $endpoint = null;
+		protected $xml_namespace = 'http://sdb.amazonaws.com/doc/2009-04-15';
 		
 		public function __construct ( $aws_access_key = null, $aws_secret = null, $endpoint = self::REGION_US_E_1 ) {
 			

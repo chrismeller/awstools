@@ -63,7 +63,33 @@
 			
 			$context = stream_context_create( $options );
 			
-			$result = file_get_contents( 'https://' . $endpoint, false, $context );
+			$response = file_get_contents( 'https://' . $endpoint, false, $context );
+			
+			echo $response;
+			
+			$response_dom = new DOMDocument( '1.0', 'utf-8' );
+			$response_dom->validateOnParse = true;
+			$response_dom->loadXML( $response );
+			
+			$errors = $response_dom->getElementsByTagName( 'Error' );
+			
+			if ( $errors->length > 0 ) {
+				
+				foreach ( $errors as $error ) {
+					
+					foreach ( $error->childNodes as $child ) {
+						if ( $child->nodeName == 'Code' ) {
+							$code = $child->nodeValue;
+						}
+						if ( $child->nodeName == 'Message' ) {
+							$message = $child->nodeValue;
+						}
+					}
+					
+					throw new AWS_Exception( $code . ': ' . $message );
+				}
+				
+			}
 			
 			echo $result;
 			

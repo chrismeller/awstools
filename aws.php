@@ -30,24 +30,27 @@
 			$dom = new DOMDocument( '1.0', 'utf-8' );
 			$dom->formatOutput = true;
 			
-			$envelope = $dom->appendChild( new DOMElement( 'SOAP-ENV:Envelope', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
-			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/' );
-			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:SOAP-ENC', 'http://http://schemas.xmlsoap.org/soap/encoding/' );
+			$envelope = $dom->appendChild( new DOMElement( 'soapenv:Envelope', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
+			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:soapenv', 'http://schemas.xmlsoap.org/soap/envelope/' );
+			//$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:SOAP-ENC', 'http://http://schemas.xmlsoap.org/soap/encoding/' );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
 			$envelope->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema' );
 			
-			$body = $envelope->appendChild( new DOMElement( 'SOAP-ENV:Body', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
-			
-			$request = $body->appendChild( new DOMElement( $action . 'Request', '', $xml_namespace ) );
+			$header = $envelope->appendChild( new DOMElement( 'soapenv:Header', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
+			$header->setAttributeNS( 'http://www.w3.org/2000/xmlns/', 'xmlns:aws', 'http://security.amazonaws.com/doc/2007-01-01' );
 			
 			$timestamp = gmdate('c');		// GMT, as recommended by Amazon
 			$signature = $this->generate_signature( $action, $timestamp );
 			
 			// append the authentication params and base info
-			$timestamp = $request->appendChild( new DOMElement( 'Timestamp', $timestamp ) );
-			$signature = $request->appendChild( new DOMElement( 'Signature', $signature ) );
-			$access_key = $request->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
-			$version = $request->appendChild( new DOMElement( 'Version', $this->api_version ) );
+			$timestamp = $header->appendChild( new DOMElement( 'Timestamp', $timestamp ) );
+			$signature = $header->appendChild( new DOMElement( 'Signature', $signature ) );
+			$access_key = $header->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
+			//$version = $request->appendChild( new DOMElement( 'Version', $this->api_version ) );
+			
+			$body = $envelope->appendChild( new DOMElement( 'soapenv:Body', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
+			
+			$request = $body->appendChild( new DOMElement( $action, '', $xml_namespace ) );
 			$action = $request->appendChild( new DOMElement( 'Action', $action ) );
 			
 			echo $dom->saveXML();

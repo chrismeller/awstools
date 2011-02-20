@@ -43,6 +43,16 @@
 			
 		}
 		
+		public function delete_domain ( $name, $options = array() ) {
+			
+			$options['DomainName'] = $name;
+			
+			$result = $this->request( 'DeleteDomain', $options );
+			
+			return $result;
+			
+		}
+		
 	}
 
 ?>

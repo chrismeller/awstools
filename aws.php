@@ -171,6 +171,13 @@
 			
 		}
 		
+		/**
+		 * Computes the RFC 2104-compliant HMAC signature for the request.
+		 * 
+		 * @param $action string The Action being executed. ie: ListDomains
+		 * @param $timestamp string The Timestamp generated for the request.
+		 * @return string The HMAC-SHA1 signature for the Signature element of the request.
+		 */
 		private function generate_signature ( $action, $timestamp ) {
 			
 			$hash = hash_hmac( 'sha1', $action . $timestamp, $this->aws_secret, true );

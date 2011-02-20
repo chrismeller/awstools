@@ -12,7 +12,8 @@
 		protected $xml_namespace;
 		
 		/**
-		 * @var stores the last AWS_Response object generated.
+		 * The last AWS_Response object generated.
+		 * @var AWS_Response|null
 		 */
 		public $last_response = null;
 		

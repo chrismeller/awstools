@@ -56,8 +56,6 @@
 			$version = $request->appendChild( new DOMElement( 'Version', $this->api_version ) );
 			$access_key = $request->appendChild( new DOMElement( 'AWSAccessKeyId', $this->aws_access_key ) );
 			
-			//$action = $request->appendChild( new DOMElement( 'Action', $action ) );
-			
 			foreach ( $options as $k => $v ) {
 				$request->appendChild( new DOMElement( $k, $v ) );
 			}

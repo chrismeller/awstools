@@ -193,6 +193,7 @@
 		
 		public $request_id;
 		public $box_usage;
+		public $next_token;
 		
 		public $response;
 		

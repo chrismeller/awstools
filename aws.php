@@ -8,6 +8,8 @@
 		private $aws_secret = null;
 		
 		protected $api_version;
+		protected $endpoint;
+		protected $xml_namespace;
 		
 		public function __construct ( $aws_access_key = null, $aws_secret = null ) {
 			
@@ -25,7 +27,7 @@
 			
 		}
 		
-		protected function request ( $action, $options = array(), $endpoint = null, $xml_namespace = null, $result_xpath = null ) {
+		protected function request ( $action, $options = array() ) {
 		
 			$dom = new DOMDocument( '1.0', 'utf-8' );
 			$dom->formatOutput = true;
@@ -41,7 +43,7 @@
 			
 			$body = $envelope->appendChild( new DOMElement( 'soapenv:Body', '', 'http://schemas.xmlsoap.org/soap/envelope/' ) );
 			
-			$request = $body->appendChild( new DOMElement( $action, '', $xml_namespace ) );
+			$request = $body->appendChild( new DOMElement( $action, '', $this->xml_namespace ) );
 			
 			// add all the authentication info for the request
 			$timestamp = $request->appendChild( new DOMElement( 'Timestamp', $timestamp ) );
@@ -70,7 +72,7 @@
 			
 			$context = stream_context_create( $options );
 			
-			$response = file_get_contents( 'https://' . $endpoint, false, $context );
+			$response = file_get_contents( 'https://' . $this->endpoint, false, $context );
 			
 			//echo $response;
 			

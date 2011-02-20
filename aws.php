@@ -57,6 +57,7 @@
 					'method' => 'POST',
 					'user_agent' => 'AWS/' . self::VERSION,
 					'content' => $dom->saveXML(),
+					'ignore_errors' => true,		// ignore HTTP status code failures and return the result so we can check for the error message 
 				)
 			);
 			

@@ -21,9 +21,25 @@
 			
 		}
 		
-		public function list_domains ( $options = array() ) {
+		public function list_domains ( $max_number_of_domains = null, $options = array() ) {
 		
-			$result = $this->request( 'ListDomains', $options, $this->endpoint, $this->xml_namespace );
+			if ( $max_number_of_domains != null ) {
+				$options['MaxNumberOfDomains'] = $max_number_of_domains;
+			}
+		
+			$result = $this->request( 'ListDomains', $options );
+			
+			return $result;
+			
+		}
+		
+		public function create_domain ( $name, $options = array() ) {
+		
+			$options['DomainName'] = $name;
+			
+			$result = $this->request( 'CreateDomain', $options );
+			
+			return $result;
 			
 		}
 		

@@ -1,6 +1,9 @@
 <?php
 
-	abstract class AWS {
+	// register the AWS autoloader
+	spl_autoload_register( array( 'AWS', 'autoload' ) );
+
+	class AWS {
 		
 		const VERSION = '0.1';
 		
@@ -190,6 +193,18 @@
 			
 			// ah HA! you thought we missed reading that line of the docs... well... we did
 			return base64_encode( $hash );
+			
+		}
+		
+		public static function autoload ( $class_name ) {
+			
+			$class_file = strtolower( $class_name );
+			
+			// convert underscores to /
+			$class_file = str_replace( '_', '/', $class_file );
+			
+			// now try to load the file with the default spl autoloader, which appends a standard list of extensions
+			spl_autoload( $class_file );
 			
 		}
 		

@@ -277,8 +277,6 @@
 			
 			$this->last_response = $r;
 			
-			print_r($r);
-			
 			return $r;
 			
 		}

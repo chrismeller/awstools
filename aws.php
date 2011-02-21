@@ -43,6 +43,45 @@
 		}
 		
 		protected function request ( $action, $options = array() ) {
+			
+			// start off our parameters
+			$parameters = array();
+			
+			$parameters['Action'] = $action;
+			$parameters['Timestamp'] = gmdate('c');		// in GMT, as recommended by Amazon
+			$parameters['Version'] = $this->api_version;
+			$parameters['AWSAccessKeyId'] = $this->aws_access_key;
+			
+			// merge in all our options, overwriting any parameters
+			$parameters = array_merge( $parameters, $options );
+			
+			$request = new AWS_Request();
+			$request->endpoint = $this->endpoint;
+			$request->action = $action;
+			$request->parameters = $options;
+			
+			$options = array(
+				'http' => array(
+					'method' => 'POST',
+					'user_agent' => 'AWS/' . self::VERSION,
+					'content' => $request->body,
+					'header' => array(
+						'Content-Type: application/x-www-form-urlencoded; charset=utf-8',
+					),
+					// ignore HTTP status code failures and return the result so we can check for the error message - requires 5.2.10+
+					'ignore_errors' => true, 
+				)
+			);
+			
+			$context = stream_context_create( $options );
+			
+			$response = file_get_contents( 'https://' . $this->endpoint, false, $context );
+			
+			return $response;
+			
+		}
+		
+		protected function request_dom ( $action, $options = array() ) {
 		
 			$dom = new DOMDocument( '1.0', 'utf-8' );
 			$dom->formatOutput = true;

@@ -5,15 +5,11 @@
 
 	class AWS {
 		
-		const VERSION = '0.1';
+		const VERSION = '0.2';
 		
 		private $aws_access_key = null;
 		private $aws_secret = null;
-		
-		protected $api_version;
-		protected $endpoint;
-		protected $xml_namespace;
-		
+
 		/**
 		 * The last AWS_Response object generated.
 		 * @var AWS_Response|null

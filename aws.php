@@ -59,16 +59,20 @@
 			$request = new AWS_Request();
 			$request->endpoint = $this->endpoint;
 			$request->action = $action;
-			$request->parameters = $options;
+			$request->parameters = $parameters;
+			
+			// sign the request!
+			AWS_Signature::factory( $this->signature_version )->sign( $request, $this->aws_secret );
+			
+			// add the right content-type to the headers
+			$request->add_header( 'Content-Type', 'application/x-www-form-urlencoded; charset=utf-8' );
 			
 			$options = array(
 				'http' => array(
 					'method' => 'POST',
 					'user_agent' => 'AWS/' . self::VERSION,
 					'content' => $request->body,
-					'header' => array(
-						'Content-Type: application/x-www-form-urlencoded; charset=utf-8',
-					),
+					'header' => $request->headers,
 					// ignore HTTP status code failures and return the result so we can check for the error message - requires 5.2.10+
 					'ignore_errors' => true, 
 				)
@@ -76,7 +80,7 @@
 			
 			$context = stream_context_create( $options );
 			
-			$response = file_get_contents( 'https://' . $this->endpoint, false, $context );
+			$response = file_get_contents( 'https://' . $request->endpoint, false, $context );
 			
 			return $response;
 			

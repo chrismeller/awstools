@@ -9,6 +9,7 @@
 		public $response;
 		
 		public $response_dom;
+		public $response_xml;
 		
 	}
 

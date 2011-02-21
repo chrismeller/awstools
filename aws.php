@@ -145,6 +145,7 @@
 			// save the DOM and SimpleXML versions too
 			//$r->response_dom = $response_dom;
 			//$r->response_xml = $response_xml;
+			$r->response_raw = $response;
 			
 			$this->last_response = $r;
 			

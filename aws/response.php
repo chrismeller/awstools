@@ -10,6 +10,7 @@
 		
 		public $response_dom;
 		public $response_xml;
+		public $response_raw;
 		
 	}
 

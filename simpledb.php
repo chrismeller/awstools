@@ -11,7 +11,7 @@
 		protected $api_version = '2009-04-15';
 		
 		protected $endpoint = null;
-		protected $xml_namespace = 'http://sdb.amazonaws.com/doc/2009-04-15';
+		protected $xml_namespace = 'http://sdb.amazonaws.com/doc/2009-04-15/';		// the trailing slash is required
 		
 		// simpledb only supports v2 for REST requests
 		protected $signature_version = 2;
@@ -30,7 +30,7 @@
 				$options['MaxNumberOfDomains'] = $max_number_of_domains;
 			}
 		
-			$result = $this->request( 'ListDomains', $options );
+			$result = $this->request( 'ListDomains', $options, '//aws:DomainName' );
 			
 			return $result;
 			

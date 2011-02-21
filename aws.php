@@ -116,7 +116,7 @@
 			
 			// if there is an xpath query provided, run that
 			if ( $xpath != null ) {
-				$response_xml->registerXPathNamespace( 'ns', $this->xml_namespace );
+				$response_xml->registerXPathNamespace( 'aws', $this->xml_namespace );
 				$result = $response_xml->xpath( $xpath );
 			}
 			else {

@@ -1,6 +1,6 @@
 <?php
 
-	class SimpleDB extends AWS {
+	class SimpleDB extends AWS_Service {
 		
 		const REGION_US_E_1 = 'sdb.amazonaws.com';
 		const REGION_US_W_1 = 'sdb.us-west-1.amazonaws.com';
@@ -12,6 +12,9 @@
 		
 		protected $endpoint = null;
 		protected $xml_namespace = 'http://sdb.amazonaws.com/doc/2009-04-15';
+		
+		// simpledb only supports v2 for REST requests
+		protected $signature_version = 2;
 		
 		public function __construct ( $aws_access_key = null, $aws_secret = null, $endpoint = self::REGION_US_E_1 ) {
 			

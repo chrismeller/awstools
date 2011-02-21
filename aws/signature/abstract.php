@@ -1,25 +1,10 @@
 <?php
 
-	interface AWS_Signature_Abstract {
+	abstract class AWS_Signature_Abstract {
 		
-		protected $key = null;
-		protected $endpoint = null;
+		protected $secret_key = null;
 		
-		abstract public function sign( $parameters = array() );
-		
-		public function key ( $key ) {
-			$this->key = $key;
-			
-			// for chaining
-			return $this;
-		}
-		
-		public function endpoint ( $endpoint ) {
-			$this->endpoint = $endpoint;
-			
-			// for chaining
-			return $this;
-		}
+		abstract public function sign ( AWS_Request $request, $secret_key );
 		
 	}
 

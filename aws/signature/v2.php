@@ -2,7 +2,19 @@
 
 	class AWS_Signature_v2 extends AWS_Signature_Abstract {
 		
-		public function sign ( $parameters = array() ) {
+		public function sign ( AWS_Request $request, $secret_key ) {
+			
+			// first we make sure the required keys for signing are set
+			
+			// if the SignatureMethod parameter isn't already set, use the default
+			if ( !isset( $request->parameters['SignatureMethod'] ) ) {
+				$request->parameters['SignatureMethod'] = 'HmacSHA256';
+			}
+			
+			// and this is version 2, so set that
+			$request->parameters['SignatureVersion'] = '2';
+			
+			
 			
 			$string = array();
 			
@@ -10,10 +22,10 @@
 			$string[] = 'POST';
 			
 			// next, the HTTP Host header, so just the domain name of the endpoint
-			$string[] = parse_url( $this->endpoint, PHP_URL_HOST );
+			$string[] = parse_url( 'http://' . $request->endpoint, PHP_URL_HOST );
 			
 			// next, the path - we trim and append a trailing slash always so we easily get a / back if there's no path
-			$uri = parse_url( rtrim( $this->endpoint ) . '/', PHP_URL_PATH );
+			$uri = parse_url( rtrim( 'http://' . $request->endpoint ) . '/', PHP_URL_PATH );
 			
 			// and URL encode it
 			$uri = rawurlencode( $uri );
@@ -23,13 +35,13 @@
 			
 			$string[] = $uri;
 			
-			// sort all parameters by key, not we're NOT ignoring case for this one
-			uksort( $parameters, 'strcmp' );
+			// sort all parameters by key
+			uksort( $request->parameters, 'strcmp' );
 			
 			// now loop through each parameter and concatenate the name and value, url-encoding both
 			// note that currently all keys are url-safe, but that may not be so in the future, so we encode them as well
 			$params = array();
-			foreach ( $parameter as $k => $v ) {
+			foreach ( $request->parameters as $k => $v ) {
 				$params[] = rawurlencode( $k ) . '=' . rawurlencode( $v );
 			}
 			
@@ -42,18 +54,16 @@
 			// and concatenate them all together, separated by a newline
 			$string = implode( "\n", $string );
 			
-			// if the SignatureMethod parameter isn't already set, use the default
-			if ( !isset( $parameters['SignatureMethod'] ) ) {
-				$parameters['SignatureMethod'] = 'HmacSHA256';
-			}
-			
 			// figure out which algorithm we're using
-			$alg = substr( strtolower( $parameters['SignatureMethod'] ), 4 );	// trim 'hmac'
+			$alg = substr( strtolower( $request->parameters['SignatureMethod'] ), 4 );	// trim 'hmac'
 			
-			$hash = hash_hmac( $alg, $string, $this->key, true );
+			$hash = hash_hmac( $alg, $string, $secret_key, true );
 			
 			// ah HA! you thought we missed reading that line of the docs... well... we did
-			return base64_encode( $hash );
+			$signature = base64_encode( $hash );
+			
+			// add it to the parameters, that's all this version does
+			$request->parameters['Signature'] = $signature;
 			
 		}
 		

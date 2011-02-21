@@ -27,7 +27,7 @@
 			uksort( $parameters, 'strcmp' );
 			
 			// now loop through each parameter and concatenate the name and value, url-encoding both
-			// note that currently all keys are UTF8-safe, but that may not be so in the future, so we encode them as well
+			// note that currently all keys are url-safe, but that may not be so in the future, so we encode them as well
 			$params = array();
 			foreach ( $parameter as $k => $v ) {
 				$params[] = rawurlencode( $k ) . '=' . rawurlencode( $v );
@@ -41,6 +41,11 @@
 			
 			// and concatenate them all together, separated by a newline
 			$string = implode( "\n", $string );
+			
+			// if the SignatureMethod parameter isn't already set, use the default
+			if ( !isset( $parameters['SignatureMethod'] ) ) {
+				$parameters['SignatureMethod'] = 'HmacSHA256';
+			}
 			
 			// figure out which algorithm we're using
 			$alg = substr( strtolower( $parameters['SignatureMethod'] ), 4 );	// trim 'hmac'

@@ -18,6 +18,11 @@
 		
 		public function __construct ( $aws_access_key = null, $aws_secret = null ) {
 			
+			// if there is a config file, load it
+			if ( file_exists( dirname( __FILE__ ) . '/config.php' ) ) {
+				include_once( dirname( __FILE__ ) . '/config.php' );
+			}
+			
 			// for compatibility with other libraries, accept constants as well
 			if ( $aws_access_key == null && !defined('AWS_KEY') ) {
 				throw new AWS_Exception( 'No access key provided and no AWS_KEY constant available.' );

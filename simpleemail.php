@@ -23,7 +23,33 @@
 		
 		public function list_verified_email_addresses ( $options = array() ) {
 		
-			$result = $this->request( 'ListVerifiedEmailAddresses', $options, '//ns:VerifiedEmailAddresses' );
+			$result = $this->request( 'ListVerifiedEmailAddresses', $options, '//aws:VerifiedEmailAddresses/aws:member' );
+			
+			return $result;
+			
+		}
+		
+		public function verify_email_address ( $email, $options = array() ) {
+			
+			$options['EmailAddress'] = $email;
+			
+			$result = $this->request( 'VerifyEmailAddress', $options );
+			
+			return $result;
+			
+		}
+		
+		public function get_send_quota ( $options = array() ) {
+			
+			$result = $this->request( 'GetSendQuota', $options );
+			
+			return $result;
+			
+		}
+		
+		public function get_send_statistics ( $options = array() ) {
+			
+			$result = $this->request( 'GetSendStatistics', $options );
 			
 			return $result;
 			

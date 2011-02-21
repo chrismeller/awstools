@@ -26,9 +26,15 @@
 			if ( $aws_access_key == null && !defined('AWS_KEY') ) {
 				throw new AWS_Exception( 'No access key provided and no AWS_KEY constant available.' );
 			}
+			else {
+				$aws_access_key = AWS_KEY;
+			}
 			
 			if ( $aws_secret == null && !defined('AWS_SECRET_KEY') ) {
 				throw new AWS_Exception( 'No secret key provided and no AWS_SECRET_KEY constant available.' );
+			}
+			else {
+				$aws_secret = AWS_SECRET_KEY;
 			}
 			
 			$this->aws_access_key = $aws_access_key;

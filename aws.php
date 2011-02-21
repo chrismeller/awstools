@@ -43,7 +43,7 @@
 			
 		}
 		
-		protected function request ( $action, $options = array() ) {
+		protected function request ( $action, $options = array(), $xpath = null ) {
 			
 			// start off our parameters
 			$parameters = array();
@@ -91,7 +91,7 @@
 			// once DOM has parsed the XML and we think it's safe, switch to SimpleXML, which is drastically easier to get results out of
 			$response_xml = simplexml_import_dom( $response_dom );
 			
-			// check for Error elements, which are returned on error
+			// check for Error elements
 			if ( isset( $response_xml->Errors ) ) {
 				
 				// throw the first one as an exception
@@ -102,12 +102,27 @@
 				
 			}
 			
+			// of course some of the APIs wrap them differently just to screw us
+			if ( isset( $response_xml->Error ) ) {
+				$code = (string)$response_xml->Error[0]->Code;
+				$message = (string)$response_xml->Error[0]->Message;
+				
+				throw new AWS_Exception( $code . ': ' . $message );
+			}
+			
 			// since it's a valid result, pick out the meta data
 			$request_id = (string)$response_xml->ResponseMetadata->RequestId;
 			$box_usage = (string)$response_xml->ResponseMetadata->BoxUsage;
 			
-			// get the actual result content
-			$result = $response_xml->{$action . 'Result'};
+			// if there is an xpath query provided, run that
+			if ( $xpath != null ) {
+				$response_xml->registerXPathNamespace( 'ns', $this->xml_namespace );
+				$result = $response_xml->xpath( $xpath );
+			}
+			else {
+				// otherwise, the whole result
+				$result = $response_xml->{$action . 'Result'};
+			}
 			
 			// if a next token is set in the result pull it out and remove it
 			if ( isset( $result->NextToken ) ) {
@@ -125,11 +140,11 @@
 			$r->next_token = $next_token;
 			
 			// convert the rest of the result to an array
-			$r->response = (array)$result;
+			$r->response = $result;
 			
 			// save the DOM and SimpleXML versions too
-			$r->response_dom = $response_dom;
-			$r->response_xml = $response_xml;
+			//$r->response_dom = $response_dom;
+			//$r->response_xml = $response_xml;
 			
 			$this->last_response = $r;
 			

@@ -24,8 +24,13 @@
 			// next, the HTTP Host header, so just the domain name of the endpoint
 			$string[] = parse_url( 'http://' . $request->endpoint, PHP_URL_HOST );
 			
-			// next, the path - we trim and append a trailing slash always so we easily get a / back if there's no path
-			$uri = parse_url( rtrim( 'http://' . $request->endpoint ) . '/', PHP_URL_PATH );
+			// next, the path
+			$uri = parse_url( rtrim( 'http://' . $request->endpoint ), PHP_URL_PATH );
+			
+			// if there is no path, use /
+			if ( $uri == '' ) {
+				$uri = '/';
+			}
 			
 			// and URL encode it
 			$uri = rawurlencode( $uri );

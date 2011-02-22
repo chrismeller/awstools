@@ -56,6 +56,77 @@
 			
 		}
 		
+		public function domain_metadata ( $name, $options = array() ) {
+			
+			$options['DomainName'] = $name;
+			
+			$result = $this->request( 'DomainMetadata', $options );
+			
+			return $result;
+			
+		}
+		
+		public function select ( $query, $consistent_read = false, $options = array() ) {
+			
+			if ( $consistent_read ) {
+				$options['ConsistentRead'] = 'true';
+			}
+			
+			$options['SelectExpression'] = $query;
+			
+			$result = $this->request( 'Select', $options, '//aws:Item' );
+			
+			return $result;
+			
+		}
+		
+		/**
+		 * @todo how can we handle per-attribute replaces?
+		 * @todo we need to figure out how to handle 'exists' for expected attributes
+		 */
+		public function put_attributes ( $domain, $name, $attributes = array(), $replace_all = false, $expected = array(), $options = array() ) {
+			
+			$options['DomainName'] = $domain;
+			$options['ItemName'] = $name;
+			
+			$i = 1;
+			foreach ( $attribute as $k => $v ) {
+				
+				if ( !is_array( $v ) ) {
+					$v = array( $v );
+				}
+				
+				foreach ( $v as $vv ) {
+					$options['Attribute.' . $i . '.Name'] = $k;
+					$options['Attribute.' . $i . '.Value'] = $vv;
+					
+					if ( $replace_all == true ) {
+						$options['Attribute.' . $i . '.Replace'] = 'true';
+					}
+					
+					$i++;
+				}
+				
+			}
+			
+			$i = 1;
+			foreach ( $expected as $k => $v ) {
+				
+				if ( !is_array( $v ) ) {
+					$v = array( $v );
+				}
+				
+				foreach ( $v as $vv ) {
+					$options['Expected.' . $i . '.Name'] = $k;
+					$options['Expected.' . $i . '.Value'] = $vv;
+				}
+				
+			}
+			
+			$result = $this->request( 'PutAttributes', $options );
+			
+		}
+		
 	}
 
 ?>

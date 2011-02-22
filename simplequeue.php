@@ -39,7 +39,7 @@
 		/**
 		 * Returns one or all attributes of a queue.
 		 * 
-		 * @param $queue_name string The name of the queue to fetch attributes for.
+		 * @param $queue_url string The URL of the queue to fetch attributes for.
 		 * @param $attributes string|array The attribute name (or array of names) to fetch. Default: All
 		 * 		Available attributes:
 		 * 			- All
@@ -55,12 +55,7 @@
 		 */
 		public function get_queue_attributes ( $queue_url, $attributes = array('All'), $options = array() ) {
 		
-			// sqs uses the peculiar method of setting the endpoint to the queue_url, not adding a QueueName attribute like every other service would
-			$this->endpoint = $queue_url;
-			
-			// we prepend http:// or https:// as necessary, so trim that off the beginning of the URL
-			$this->endpoint = str_replace( 'http://', '', $this->endpoint );
-			$this->endpoint = str_replace( 'https://', '', $this->endpoint );
+			$this->set_queue_endpoint( $queue_url );
 		
 			if ( !is_array( $attributes ) ) {
 				$attributes = array( $attributes );
@@ -87,6 +82,69 @@
 			$result->response = $a;
 			
 			return $result;
+			
+		}
+
+		/**
+		 * Retrieves a message (or messages) from a queue.
+		 * 
+		 * @param $queue_url The URL of the queue to fetch message(s) from.
+		 * @param $num_of_messages int The number of messages to fetch. From 1 to 10. Default: 1
+		 * @param $attributes string|array An attribute (or array of attributes) to return for each message. Default: array(), ie: none
+		 * 		Available attributes:
+		 * 			- All
+		 * 			- SenderId - the AWS account number (or IP address, if anonymous) of the sender.
+		 * 			- SentTimestamp
+		 * 			- ApproximateReceiveCount - the number of times a message has been received but not deleted
+		 * 			- ApproximateFirstReceiveTimestamp - the time the message was first received
+		 * @param $visibility_timeout int The duration (in seconds) that the received message(s) are hidden from subsequent requests. From 1 to 43,200. Default: the queue's setting
+		 */
+		public function receive_message ( $queue_url, $num_of_messages = 1, $attributes = array(), $visibility_timeout = null, $options = array() ) {
+			
+			$this->set_queue_endpoint( $queue_url );
+			
+			if ( $num_of_messages < 1 || $num_of_messages > 10 ) {
+				throw new InvalidArgumentException( 'You may only get between 1 and 10 messages per request.' );
+			}
+			else {
+				$options['MaxNumberOfMessages'] = $num_of_messages;
+			}
+			
+			if ( $visibility_timeout != null ) {
+				
+				if ( $visibility_timeout < 0 || $visibility_timeout > 43200 ) {
+					throw new InvalidArgumentException( 'The visibility timeout must be between 0 and 43,200 seconds.' );
+				}
+				else {
+					$options['VisibilityTimeout'] = $visibility_timeout;
+				}
+				
+			}
+			
+			if ( !is_array( $attributes ) ) {
+				$attributes = array( $attributes );
+			}
+			
+			$i = 1;
+			foreach ( $attributes as $v ) {
+				$options['AttributeName.' . $i] = $v;
+				$i++;
+			}
+			
+			$result = $this->request( 'ReceiveMessage', $options, '//aws:Message' );
+			
+			return $result;
+			
+		}
+		
+		private function set_queue_endpoint ( $queue_url ) {
+			
+			// sqs uses the peculiar method of setting the endpoint to the queue_url, not adding a QueueName attribute like every other service would
+			$this->endpoint = $queue_url;
+			
+			// we prepend http:// or https:// as necessary, so trim that off the beginning of the URL
+			$this->endpoint = str_replace( 'http://', '', $this->endpoint );
+			$this->endpoint = str_replace( 'https://', '', $this->endpoint );
 			
 		}
 		

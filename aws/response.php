@@ -12,6 +12,16 @@
 		public $response_xml;
 		public $response_raw;
 		
+		public function __get ( $name ) {
+			
+			if ( isset( $this->response->{$name} ) ) {
+				return (string)$this->response->{$name};
+			}
+			
+			return false;
+			
+		}
+		
 	}
 
 ?>

@@ -100,6 +100,8 @@
 		 * @param $attributes array Associative array of name => value pairs or name => array( value, value, ... ) pairs to add
 		 * @param $expected array Associative array of name => value pairs or name => array( value, value, ... ) pairs to check for before saving
 		 * @param $options array Any additional options to pass in request
+		 * @return AWS_Response
+		 * @throws AWS_Exception
 		 */
 		public function put_attributes ( $domain, $name, $attributes = array(), $replace_all = false, $expected = array(), $options = array() ) {
 			

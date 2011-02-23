@@ -8,7 +8,7 @@
 			$date = gmdate( DateTime::RFC2822 );
 			
 			// add the date header
-			$request->add_header( 'Date', $date );
+			$request->add_header( 'X-AMZ-Date', $date );
 			
 			// if the SignatureMethod parameter isn't already set, use the default
 			// this isn't actually used in v3 as a parameter, but we'll use it for consistency

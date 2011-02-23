@@ -93,7 +93,7 @@
 			$options['ItemName'] = $name;
 			
 			$i = 1;
-			foreach ( $attribute as $k => $v ) {
+			foreach ( $attributes as $k => $v ) {
 				
 				if ( !is_array( $v ) ) {
 					$v = array( $v );
@@ -127,6 +127,83 @@
 			}
 			
 			$result = $this->request( 'PutAttributes', $options );
+
+			return $result;
+
+		}
+		
+		public function batch_put_attributes ( $domain, $items = array(), $replace_all = false, $options = array() ) {
+			
+			$options['DomainName'] = $domain;
+			
+			$i = 1;
+			foreach ( $items as $item_name => $attributes ) {
+				
+				$options['Item.' . $i . '.ItemName'] = $item_name;
+				
+				$j = 1;
+				foreach ( $attributes as $attribute_name => $attribute_values ) {
+					
+					// if $attribute_values is not an array, make it one so we can treat single values and multiple values the same
+					if ( !is_array( $attribute_values ) ) {
+						$attribute_values = array( $attribute_values );
+					}
+					
+					foreach ( $attribute_values as $value ) {
+						$options['Item.' . $i . '.Attribute.' . $j . '.Name'] = $attribute_name;
+						$options['Item.' . $i . '.Attribute.' . $j . '.Value'] = $value;
+						
+						if ( $replace_all == true ) {
+							$options['Item.' . $i . '.Attribute.' . $j . '.Replace'] = 'true';
+						}
+						
+						$j++;
+					}
+					
+				}
+				
+				$i++;
+				
+			}
+			
+			$result = $this->request( 'BatchPutAttributes', $options );
+			
+			return $result;
+			
+		}
+		
+		public function get_attributes ( $domain, $item_name, $attributes = array(), $options = array() ) {
+			
+			$options['DomainName'] = $domain;
+			$options['ItemName'] = $item_name;
+			
+			$i = 0;
+			foreach ( $attributes as $attribute ) {
+				$options['AttributeName. ' . $i] = $attribute;
+			}
+			
+			$result = $this->request( 'GetAttributes', $options, '//aws:Attribute' );
+			
+			// the results for this call are particularly cumbersome, so make them better
+			$a = array();
+			foreach ( $result->response as $attribute ) {
+				$name = (string)$attribute->Name;
+				$value = (string)$attribute->Value;
+				
+				// if the attribute name is already set, make it an array and append the new result
+				if ( isset( $a[ $name ] ) ) {
+					$a[ $name ] = array( $a[ $name ] );
+					$a[ $name ][] = $value;
+				}
+				else {
+					$a[ $name ] = $value;
+				}
+			}
+			
+			// replace the response
+			$result->response = $a;
+			
+			return $result;
 			
 		}
 		

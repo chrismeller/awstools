@@ -84,8 +84,22 @@
 		}
 		
 		/**
+		 * Creates or replaces attributes in an item.
+		 * 
+		 * Examples:
+		 * 		<code>
+		 * 			// appends attr1 with a single value ('value1') and attr2 with multiple values ('value2a' and 'value2b') to any existing values for Item1
+		 * 			$sdb->put_attributes( 'TestDomain', 'Item1', array( 'attr1' => 'value1', 'attr2' => array( 'value2a', 'value2b' ) ) );
+		 *		</code>
+		 * 
 		 * @todo how can we handle per-attribute replaces?
 		 * @todo we need to figure out how to handle 'exists' for expected attributes
+		 * 
+		 * @param $domain string The name of the domain
+		 * @param $name string The name of the item
+		 * @param $attributes array Associative array of name => value pairs or name => array( value, value, ... ) pairs to add
+		 * @param $expected array Associative array of name => value pairs or name => array( value, value, ... ) pairs to check for before saving
+		 * @param $options array Any additional options to pass in request
 		 */
 		public function put_attributes ( $domain, $name, $attributes = array(), $replace_all = false, $expected = array(), $options = array() ) {
 			

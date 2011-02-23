@@ -177,9 +177,14 @@
 			$options['DomainName'] = $domain;
 			$options['ItemName'] = $item_name;
 			
-			$i = 0;
+			// if $attributes isn't an array, turn it into one - lets us pass in a single string as well as an array
+			if ( !is_array( $attributes ) ) {
+				$attributes = array( $attributes );
+			}
+			
+			$i = 1;
 			foreach ( $attributes as $attribute ) {
-				$options['AttributeName. ' . $i] = $attribute;
+				$options['AttributeName.' . $i] = $attribute;
 			}
 			
 			$result = $this->request( 'GetAttributes', $options, '//aws:Attribute' );

@@ -30,7 +30,10 @@
 				$options['MaxNumberOfDomains'] = $max_number_of_domains;
 			}
 		
-			$result = $this->request( 'ListDomains', $options, '//aws:DomainName' );
+			$result = $this->request( 'ListDomains', $options );
+			
+			// the response should only include the DomainName element
+			$result->response = $result->response->DomainName;
 			
 			return $result;
 			

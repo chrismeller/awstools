@@ -83,6 +83,23 @@
 			
 		}
 		
+		public function select_count_all ( $query, $consistent_read = false, $options = array() ) {
+			
+			$total = 0;
+			do {
+			
+				$result = $this->select( $query, $consistent_read, $options );
+				$options['NextToken'] = $result->next_token;
+				
+				$total = $total + $result->response[0]->Attribute->Value;
+				
+			}
+			while ( $result->next_token != null );
+			
+			return $total;
+			
+		}
+		
 		/**
 		 * Creates or replaces attributes in an item.
 		 * 

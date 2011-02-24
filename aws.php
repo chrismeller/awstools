@@ -114,6 +114,15 @@
 			$request_id = (string)$response_xml->ResponseMetadata->RequestId;
 			$box_usage = (string)$response_xml->ResponseMetadata->BoxUsage;
 			
+			// if a next token is set in the result pull it out and remove it
+			if ( isset( $response_xml->{$action . 'Result'}->NextToken ) ) {
+				$next_token = (string)$response_xml->{$action . 'Result'}->NextToken;
+				unset( $response_xml->{$action . 'Result'}->NextToken );
+			}
+			else {
+				$next_token = null;
+			}
+			
 			// if there is an xpath query provided, run that
 			if ( $xpath != null ) {
 				$response_xml->registerXPathNamespace( 'aws', $this->xml_namespace );
@@ -122,15 +131,6 @@
 			else {
 				// otherwise, the whole result
 				$result = $response_xml->{$action . 'Result'};
-			}
-			
-			// if a next token is set in the result pull it out and remove it
-			if ( isset( $result->NextToken ) ) {
-				$next_token = (string)$result->NextToken;
-				unset( $result->NextToken );
-			}
-			else {
-				$next_token = null;
 			}
 			
 			// create the response object we hand back to the client

@@ -140,6 +140,41 @@
 			
 		}
 		
+		public function list_subscriptions ( $options = array() ) {
+			
+			$result = $this->request( 'ListSubscriptions', $options, '//aws:Subscriptions/aws:member' );
+			
+			return $result;
+			
+		}
+		
+		public function unsubscribe ( $subscription_arn, $options = array() ) {
+			
+			$options['SubscriptionArn'] = $subscription_arn;
+			
+			$result = $this->request( 'Unsubscribe', $options );
+			
+			return $result;
+			
+		}
+		
+		public function publish ( $topic_arn, $message, $subject = '', $options = array() ) {
+			
+			$options['TopicArn'] = $topic_arn;
+			$options['Message'] = $message;
+			
+			if ( $subject != '' ) {
+				$options['Subject'] = $subject;
+			}
+			
+			$result = $this->request( 'Publish', $options, '//aws:MessageId' );
+			
+			$result->response = (string)$result->response[0];
+			
+			return $result;
+			
+		}
+		
 	}
 
 ?>

@@ -54,6 +54,35 @@
 			
 		}
 		
+		public function get_topic_attributes ( $topic_arn, $options = array() ) {
+			
+			$options['TopicArn'] = $topic_arn;
+			
+			$result = $this->request( 'GetTopicAttributes', $options, '//aws:Attributes/aws:entry' );
+			
+			// the results for this call are particularly cumbersome, so make them better
+			$a = array();
+			foreach ( $result->response as $attribute ) {
+				$name = (string)$attribute->key;
+				$value = (string)$attribute->value;
+				
+				// if the attribute name is already set, make it an array and append the new result
+				if ( isset( $a[ $name ] ) ) {
+					$a[ $name ] = array( $a[ $name ] );
+					$a[ $name ][] = $value;
+				}
+				else {
+					$a[ $name ] = $value;
+				}
+			}
+			
+			// replace the response
+			$result->response = $a;
+			
+			return $result;
+			
+		}
+		
 		/**
 		 * Subscribe to an endpoint.
 		 * 

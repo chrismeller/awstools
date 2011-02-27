@@ -44,6 +44,16 @@
 			
 		}
 		
+		public function delete_topic ( $topic_arn, $options = array() ) {
+			
+			$options['TopicArn'] = $topic_arn;
+			
+			$result = $this->request( 'DeleteTopic', $options );
+			
+			return $result;
+			
+		}
+		
 		/**
 		 * Subscribe to an endpoint.
 		 * 

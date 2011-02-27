@@ -54,6 +54,19 @@
 			
 		}
 		
+		/**
+		 * Returns all of the properites of a topic.
+		 * 
+		 * Attributes are:
+		 *		- TopicArn: the topic's ARN
+		 *		- Owner: the AWS account ID of the topic's owner
+		 *		- Policy: the JSON serialization of the topic's access control policy
+		 *		- DisplayName: the human-readable name used in the "From" field for notifications sent to email and email-json endpoints
+		 * 
+		 * @param string $topic_arn The ARN of the topic you want attributes for.
+		 * @param array $options
+		 * @return type AWS_Response With an array of AttributeName => AttributeValue pairs
+		 */
 		public function get_topic_attributes ( $topic_arn, $options = array() ) {
 			
 			$options['TopicArn'] = $topic_arn;

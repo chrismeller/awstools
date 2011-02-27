@@ -188,6 +188,18 @@
 			
 		}
 		
+		public function set_topic_attribute ( $topic_arn, $name, $value, $options = array() ) {
+			
+			$options['TopicArn'] = $topic_arn;
+			$options['AttributeName'] = $name;
+			$options['AttributeValue'] = $value;
+			
+			$result = $this->request( 'SetTopicAttributes', $options );
+			
+			return $result;
+			
+		}
+		
 	}
 
 ?>

@@ -6,6 +6,7 @@
 		const REGION_US_W_1 = 'sns.us-west-1.amazonaws.com';
 		const REGION_EU_W_1 = 'sns.eu-west-1.amazonaws.com';
 		const REGION_APAC_SE_1 = 'sns.ap-southeast-1.amazonaws.com';
+		const REGION_APAC_NE_1 = 'sns.ap-northeast-1.amazonaws.com';
 		
 		// define the API version, which is required for all sub-classes
 		protected $api_version = '2010-03-31';

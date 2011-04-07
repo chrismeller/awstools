@@ -228,7 +228,13 @@
 				
 				// if the attribute name is already set, make it an array and append the new result
 				if ( isset( $a[ $name ] ) ) {
-					$a[ $name ] = array( $a[ $name ] );
+					
+					// if it's not already an array, make it one
+					if ( !is_array( $a[ $name ] ) ) {
+						$a[ $name ] = array( $a[ $name ] );
+					}
+					
+					// and either way, append the new value
 					$a[ $name ][] = $value;
 				}
 				else {

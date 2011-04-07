@@ -160,6 +160,21 @@
 			return $result;
 			
 		}
+		
+		public function create_queue ( $name, $default_visibility_timeout = null, $options = array() ) {
+			
+			$options['QueueName'] = $name;
+			
+			if ( $default_visibility_timeout !== null ) {
+				$options['DefaultVisibilityTimeout'] = $default_visibility_timeout;
+			}
+			
+			$result = $this->request( 'CreateQueue', $options, '//aws:QueueUrl' );
+			
+			return $result;
+			
+		}
+		
 	}
 
 ?>

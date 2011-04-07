@@ -149,6 +149,17 @@
 			
 		}
 		
+		public function send_message ( $queue_url, $message, $options = array() ) {
+			
+			$this->set_queue_endpoint( $queue_url );
+			
+			$options['MessageBody'] = $message;
+			
+			$result = $this->request( 'SendMessage', $options, '//aws:MessageId' );
+			
+			return $result;
+			
+		}
 	}
 
 ?>

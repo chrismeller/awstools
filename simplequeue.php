@@ -175,6 +175,18 @@
 			
 		}
 		
+		public function delete_message ( $queue_url, $receipt_handle, $options = array() ) {
+			
+			$this->set_queue_endpoint( $queue_url );
+			
+			$options['ReceiptHandle'] = $receipt_handle;
+			
+			$result = $this->request( 'DeleteMessage', $options );
+			
+			return $result;
+			
+		}
+		
 	}
 
 ?>

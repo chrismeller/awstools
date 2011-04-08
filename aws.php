@@ -90,6 +90,10 @@
 			
 			$response = file_get_contents( 'https://' . $request->endpoint, false, $context );
 			
+			if ( $response === false ) {
+				throw new AWS_Exception( 'Unable to complete request.' );
+			}
+			
 			// start parsing it using DOM, which has the best universal support
 			$response_dom = new DOMDocument( '1.0', 'utf-8' );
 			$response_dom->formatOutput = true;

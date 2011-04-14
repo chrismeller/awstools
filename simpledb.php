@@ -57,6 +57,17 @@
 			
 		}
 		
+		public function delete_item ( $domain, $item_name, $options = array() ) {
+			
+			$options['DomainName'] = $domain;
+			$options['ItemName'] = $item_name;
+			
+			$result = $this->request( 'DeleteAttributes', $options );
+			
+			return $result;
+			
+		}
+		
 		public function domain_metadata ( $name, $options = array() ) {
 			
 			$options['DomainName'] = $name;

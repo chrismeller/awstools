@@ -101,6 +101,54 @@
 
 		}
 
+		/**
+		 * Submit a batch request to Put or Delete up to 25 items.
+		 *
+		 * @param  array  $puts     Array of puts (table => item pairs) to put.
+		 * @param  array  $deletes  Array of table => keys to delete.
+		 * @param  array  $options  Any options to include.
+		 * @return object           JSON-decoded result.
+		 */
+		public function batch_write_item ( $puts = array(), $deletes = array(), $options = array() ) {
+
+			$requests = array();
+
+			foreach ( $puts as $put ) {
+				foreach ( $put as $table => $item ) {
+					if ( !isset( $requests[ $table ] ) ) {
+						$requests[ $table ] = array();
+					}
+
+					$requests[ $table ][] = array(
+						'PutRequest' => array(
+							'Item' => $item,
+						),
+					);
+				}
+			}
+
+			foreach ( $deletes as $delete ) {
+				foreach ( $delete as $table => $key ) {
+					if ( !isset( $requests[ $table ] ) ) {
+						$requests[ $table ] = array();
+					}
+
+					$requests[ $table ][] = array(
+						'DeleteRequest' => array(
+							'Key' => $key,
+						),
+					);
+				}
+			}
+
+			$options['RequestItems'] = $requests;
+
+			$result = $this->request( 'BatchWriteItem', $options );
+
+			return $result;
+
+		}
+
 		public function describe_table ( $table, $options = array() ) {
 
 			$options['TableName'] = $table;

@@ -59,11 +59,14 @@
 			$request->parameters = $parameters;
 			$request->body = $this->format_body( $request->parameters );
 			
+			// add the right content-type to the headers, if there isn't one already
+			if ( !isset( $request->headers['Content-Type'] ) ) {
+				$request->add_header( 'Content-Type', 'application/x-www-form-urlencoded; charset=utf-8' );
+			}
+
 			// sign the request!
 			AWS_Signature::factory( $this->signature_version )->sign( $request, $this->aws_secret );
 			
-			// add the right content-type to the headers
-			$request->add_header( 'Content-Type', 'application/x-www-form-urlencoded; charset=utf-8' );
 
 			// put the headers into a format we can take
 			$h = array();

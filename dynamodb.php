@@ -197,7 +197,7 @@
 			return array( self::TYPE_BINARY_SET => $value );
 		}
 
-		private function key ( $hash_key, $range_key = null ) {
+		public function key ( $hash_key, $range_key = null ) {
 			$key = array(
 				'HashKeyElement' => $hash_key,
 			);

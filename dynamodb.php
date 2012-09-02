@@ -9,6 +9,13 @@
 		const REGION_APAC_SE_1 = 'dynamodb.ap-southeast-1.amazonaws.com';
 		const REGION_APAC_NE_1 = 'dynamodb.ap-northeast-1.amazonaws.com';
 
+		const TYPE_STRING = 'S';
+		const TYPE_NUMBER = 'N';
+		const TYPE_BINARY = 'B';
+		const TYPE_STRING_SET = 'SS';
+		const TYPE_NUMBER_SET = 'NS';
+		const TYPE_BINARY_SET = 'BS';
+
 		// define the API version, which is required for all sub-classes
 		protected $api_version = '20111205';		// it's annoying that this one doesn't use -'s like all the others... grr!
 

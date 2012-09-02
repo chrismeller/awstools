@@ -48,10 +48,16 @@
 
 		}
 
-		public function get_item ( $table, $key, $attributes = array(), $consistent_read = false, $options = array() ) {
+		public function get_item ( $table, $hash_key, $range_key = null, $attributes = array(), $consistent_read = false, $options = array() ) {
 
 			$options['TableName'] = $table;
-			$options['Key'] = $key;
+			$options['Key'] = array(
+				'HashKeyElement' => $hash_key,
+			);
+
+			if ( $range_key != null ) {
+				$options['Key']['RangeKeyElement'] = $range_key;
+			}
 
 			if ( !empty( $attributes ) ) {
 				$options['AttributesToGet'] = $attributes;

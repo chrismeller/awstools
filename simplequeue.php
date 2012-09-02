@@ -1,6 +1,6 @@
 <?php
 
-	class SimpleQueue extends AWS_Service {
+	class SimpleQueue extends AWS_Service_XML {
 		
 		const REGION_US_E_1 = 'sqs.us-east-1.amazonaws.com';
 		const REGION_US_W_1 = 'sqs.us-west-1.amazonaws.com';

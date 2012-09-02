@@ -1,6 +1,6 @@
 <?php
 
-	class SimpleDB extends AWS_Service {
+	class SimpleDB extends AWS_Service_XML {
 		
 		const REGION_US_E_1 = 'sdb.amazonaws.com';
 		const REGION_US_W_1 = 'sdb.us-west-1.amazonaws.com';

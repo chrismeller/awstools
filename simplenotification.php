@@ -1,6 +1,6 @@
 <?php
 
-	class SimpleNotification extends AWS_Service {
+	class SimpleNotification extends AWS_Service_XML {
 		
 		const REGION_US_E_1 = 'sns.us-east-1.amazonaws.com';
 		const REGION_US_W_1 = 'sns.us-west-1.amazonaws.com';

@@ -1,6 +1,6 @@
 <?php
 
-	class SimpleEmail extends AWS_Service {
+	class SimpleEmail extends AWS_Service_XML {
 		
 		const REGION_US_E_1 = 'email.us-east-1.amazonaws.com';
 		

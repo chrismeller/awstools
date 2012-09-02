@@ -15,7 +15,18 @@
 			$response = json_decode( $response );
 
 			if ( isset( $response->__type ) ) {
-				throw new AWS_Exception( $response->__type . ': ' . $response->message );
+
+				if ( isset( $response->message ) ) {
+					$message = $response->message;
+				}
+				else if ( isset( $response->Message ) ) {
+					$message = $response->Message;
+				}
+				else {
+					$message = null;
+				}
+
+				throw new AWS_Exception( $response->__type . ': ' . $message );
 			}
 
 			return $response;

@@ -6,7 +6,17 @@
 
 		protected function request ( $action, $options = array(), $xpath = null ) {
 
-			$response = parent::request( $action, $options, $xpath );
+			// these are default parameters we set
+			$parameters = array();
+			$parameters['Timestamp'] = gmdate('c');		// in GMT, as recommended by Amazon
+			$parameters['AWSAccessKeyId'] = $this->aws_access_key;
+			$parameters['Action'] = $action;
+			$parameters['Version'] = $this->api_version;
+
+			// now merge them into the options before we pass it off to our parent
+			$options = array_merge( $parameters, $options );
+
+			$response = parent::request( $action, $options, array() );
 
 			// start parsing it using DOM, which has the best universal support
 			$response_dom = new DOMDocument( '1.0', 'utf-8' );

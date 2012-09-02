@@ -51,18 +51,7 @@
 			
 		}
 		
-		protected function request ( $action, $options = array(), $xpath = null ) {
-			
-			// start off our parameters
-			$parameters = array();
-			
-			$parameters['Action'] = $action;
-			$parameters['Timestamp'] = gmdate('c');		// in GMT, as recommended by Amazon
-			$parameters['Version'] = $this->api_version;
-			$parameters['AWSAccessKeyId'] = $this->aws_access_key;
-			
-			// merge in all our options, overwriting any parameters
-			$parameters = array_merge( $parameters, $options );
+		protected function request ( $action, $options = array(), $headers = array() ) {
 			
 			$request = new AWS_Request();
 			$request->endpoint = $this->endpoint;

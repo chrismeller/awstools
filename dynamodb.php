@@ -128,7 +128,7 @@
 		}
 
 		public function number ( $value = null ) {
-			return array( self::TYPE_NUMBER => $value );
+			return array( self::TYPE_NUMBER => (string)$value );
 		}
 
 		public function binary ( $value = null ) {

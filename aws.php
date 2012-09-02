@@ -74,13 +74,19 @@
 			
 			// add the right content-type to the headers
 			$request->add_header( 'Content-Type', 'application/x-www-form-urlencoded; charset=utf-8' );
+
+			// put the headers into a format we can take
+			$h = array();
+			foreach ( $request->headers as $k => $v ) {
+				$h[] = $k . ': ' . $v;
+			}
 			
 			$options = array(
 				'http' => array(
 					'method' => 'POST',
 					'user_agent' => 'AWSTools/' . self::VERSION,
 					'content' => $request->body,
-					'header' => $request->headers,
+					'header' => $h,
 					// ignore HTTP status code failures and return the result so we can check for the error message - requires 5.2.10+
 					'ignore_errors' => true, 
 				)

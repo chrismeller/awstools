@@ -7,13 +7,7 @@
 		
 		public function add_header ( $header, $value = null ) {
 			
-			if ( $value !== null ) {
-				$this->headers[ $header ] = $header . ': ' . $value;
-			}
-			else {
-				// some headers don't have a value, so don't require it
-				$this->headers[ $header ] = $header;
-			}
+			$this->headers[ $header ] = $value;
 			
 		}
 		

@@ -5,7 +5,7 @@
 
 	class AWS {
 		
-		const VERSION = '0.2';
+		const VERSION = '0.3';
 		
 		protected $aws_access_key = null;
 		protected $aws_secret = null;

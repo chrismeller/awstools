@@ -8,7 +8,7 @@
 			$date = new DateTime( 'UTC' );
 
 			// add the date header
-			$request->add_header( 'X-AMZ-Date', $date->format( 'Ymd\This\Z' ) );
+			$request->add_header( 'X-AMZ-Date', $date->format( 'Ymd\THis\Z' ) );
 
 			// if the Algorithm isn't already set, use the default
 			if ( !isset( $request->algorithm ) ) {
@@ -79,7 +79,7 @@
 			$string[] = $request->algorithm;
 
 			// 2) RequestDate
-			$string[] = $date->format( 'Ymd\This\Z' );
+			$string[] = $date->format( 'Ymd\THis\Z' );
 
 			// 3) CredentialScope
 			$scope = array(

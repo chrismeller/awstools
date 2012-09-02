@@ -111,6 +111,20 @@
 
 		}
 
+		public function update_table ( $table, $read_units, $write_units, $options = array() ) {
+
+			$options['TableName'] = $table;
+			$options['ProvisionedThroughput'] = array(
+				'ReadCapacityUnits' => $read_units,
+				'WriteCapacityUnits' => $write_units,
+			);
+
+			$result = $this->request( 'UpdateTable', $options );
+
+			return $result;
+
+		}
+
 		public function string ( $value = null ) {
 			return array( self::TYPE_STRING => (string)$value );
 		}

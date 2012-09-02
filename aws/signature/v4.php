@@ -38,21 +38,7 @@
 			$canonical_request[] = $uri;		// 2) URI
 
 			// 3) CanonicalQueryString
-
-			// sort all parameters by key
-			uksort( $request->parameters, 'strcmp' );
-
-			// now loop through each parameter and concatenate the name and value, url-encoding both
-			// note that currently all keys are url-safe, but that may not be so in the future, so we encode them as well
-			$params = array();
-			foreach ( $request->parameters as $k => $v ) {
-				$params[] = rawurlencode( $k ) . '=' . rawurlencode( $v );
-			}
-
-			// and concatenate them all with &'s
-			$params = implode( '&', $params );
-
-			// add params to the list for the string
+			//  all our requests are POST and shouldn't have a query string
 			$canonical_request[] = '';
 
 			// 4) CanonicalHeaders

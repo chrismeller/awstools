@@ -8,11 +8,11 @@
 		public function add_header ( $header, $value = null ) {
 			
 			if ( $value !== null ) {
-				$this->headers[] = $header . ': ' . $value;
+				$this->headers[ $header ] = $header . ': ' . $value;
 			}
 			else {
 				// some headers don't have a value, so don't require it
-				$this->headers[] = $header;
+				$this->headers[ $header ] = $header;
 			}
 			
 		}

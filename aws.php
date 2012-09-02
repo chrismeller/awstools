@@ -7,8 +7,8 @@
 		
 		const VERSION = '0.2';
 		
-		private $aws_access_key = null;
-		private $aws_secret = null;
+		protected $aws_access_key = null;
+		protected $aws_secret = null;
 
 		/**
 		 * The last AWS_Response object generated.

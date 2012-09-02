@@ -56,7 +56,8 @@
 			$request = new AWS_Request();
 			$request->endpoint = $this->endpoint;
 			$request->action = $action;
-			$request->parameters = $parameters;
+			$request->parameters = $options;
+			$request->headers = $headers;
 			$request->body = $this->format_body( $request->parameters );
 			
 			// add the right content-type to the headers, if there isn't one already

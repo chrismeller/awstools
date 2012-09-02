@@ -78,6 +78,29 @@
 
 		}
 
+		public function delete_item ( $table, $hash_key, $range_key = null, $expected = array(), $return_values = 'NONE', $options = array() ) {
+
+			$options['TableName'] = $table;
+			$options['Key'] = array(
+				'HashKeyElement' => $hash_key,
+			);
+
+			if ( $range_key != null ) {
+				$options['Key']['RangeKeyElement'] = $range_key;
+			}
+
+			if ( !empty( $expected ) ) {
+				$options['Expected'] = $expected;
+			}
+
+			$options['ReturnValues'] = $return_values;
+
+			$result = $this->request( 'DeleteItem', $options );
+
+			return $result;
+
+		}
+
 		public function put_item ( $table, $attributes, $return_values = 'NONE', $options = array() ) {
 
 			$options['TableName'] = $table;

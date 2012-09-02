@@ -109,7 +109,7 @@
 
 			$result = $this->request( 'PutItem', $options );
 
-			return $results;
+			return $result;
 
 		}
 

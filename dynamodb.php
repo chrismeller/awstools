@@ -58,13 +58,7 @@
 		public function get_item ( $table, $hash_key, $range_key = null, $attributes = array(), $consistent_read = false, $options = array() ) {
 
 			$options['TableName'] = $table;
-			$options['Key'] = array(
-				'HashKeyElement' => $hash_key,
-			);
-
-			if ( $range_key != null ) {
-				$options['Key']['RangeKeyElement'] = $range_key;
-			}
+			$options['Key'] = $this->key( $hash_key, $range_key );
 
 			if ( !empty( $attributes ) ) {
 				$options['AttributesToGet'] = $attributes;
@@ -81,13 +75,7 @@
 		public function delete_item ( $table, $hash_key, $range_key = null, $expected = array(), $return_values = 'NONE', $options = array() ) {
 
 			$options['TableName'] = $table;
-			$options['Key'] = array(
-				'HashKeyElement' => $hash_key,
-			);
-
-			if ( $range_key != null ) {
-				$options['Key']['RangeKeyElement'] = $range_key;
-			}
+			$options['Key'] = $this->key( $hash_key, $range_key );
 
 			if ( !empty( $expected ) ) {
 				$options['Expected'] = $expected;
@@ -145,6 +133,18 @@
 
 		public function binary_set ( $value = null ) {
 			return array( self::TYPE_BINARY_SET => $value );
+		}
+
+		private function key ( $hash_key, $range_key = null ) {
+			$key = array(
+				'HashKeyElement' => $hash_key,
+			);
+
+			if ( $range_key != null ) {
+				$key['RangeKeyElement'] = $range_key;
+			}
+
+			return $key;
 		}
 
 	}

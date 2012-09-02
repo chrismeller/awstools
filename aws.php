@@ -65,8 +65,7 @@
 			}
 
 			// sign the request!
-			AWS_Signature::factory( $this->signature_version )->sign( $request, $this->aws_secret );
-			
+			AWS_Signature::factory( $this->signature_version )->access_key( $this->aws_access_key )->sign( $request, $this->aws_secret );
 
 			// put the headers into a format we can take
 			$h = array();

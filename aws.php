@@ -57,6 +57,7 @@
 			$request->endpoint = $this->endpoint;
 			$request->action = $action;
 			$request->parameters = $parameters;
+			$request->body = $this->format_body( $request->parameters );
 			
 			// sign the request!
 			AWS_Signature::factory( $this->signature_version )->sign( $request, $this->aws_secret );
@@ -74,13 +75,13 @@
 				'http' => array(
 					'method' => 'POST',
 					'user_agent' => 'AWSTools/' . self::VERSION,
-					'content' => $request->body,
+					'content' => $this->format_body( $request->parameters ),
 					'header' => $h,
 					// ignore HTTP status code failures and return the result so we can check for the error message - requires 5.2.10+
 					'ignore_errors' => true, 
 				)
 			);
-			
+
 			$context = stream_context_create( $options );
 			
 			$response = file_get_contents( 'https://' . $request->endpoint, false, $context );
@@ -90,6 +91,23 @@
 			}
 			return $response;
 			
+		}
+
+		protected function format_body ( $parameters = array() ) {
+
+			// note that http_build_query's enc_type argument would solve this, but we don't have 5.3.6 reliably
+			
+			$body = array();
+			foreach ( $parameters as $k => $v ) {
+				
+				$body[] = rawurlencode( $k ) . '=' . rawurlencode( $v );
+				
+			}
+			
+			$body = implode('&', $body);
+			
+			return $body;
+
 		}
 
 		public static function autoload ( $class_name ) {

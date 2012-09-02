@@ -4,7 +4,6 @@
 		
 		protected $api_version;
 		protected $endpoint;
-		protected $xml_namespace;
 		
 		protected $signature_version;
 		

@@ -2,6 +2,8 @@
 
 	abstract class AWS_Service_XML extends AWS_Service {
 
+		protected $xml_namespace;
+
 		protected function request ( $action, $options = array(), $xpath = null ) {
 
 			$response = parent::request( $action, $options, $xpath );

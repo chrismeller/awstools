@@ -123,6 +123,30 @@
 
 		}
 
+		public function string ( $value = null ) {
+			return array( self::TYPE_STRING => (string)$value );
+		}
+
+		public function number ( $value = null ) {
+			return array( self::TYPE_NUMBER => $value );
+		}
+
+		public function binary ( $value = null ) {
+			return array( self::TYPE_BINARY => $value );
+		}
+
+		public function string_set ( $value = null ) {
+			return array( self::TYPE_STRING_SET => $value );
+		}
+
+		public function number_set ( $value = null ) {
+			return array( self::TYPE_NUMBER_SET => $value );
+		}
+
+		public function binary_set ( $value = null ) {
+			return array( self::TYPE_BINARY_SET => $value );
+		}
+
 	}
 
 ?>

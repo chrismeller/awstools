@@ -116,6 +116,11 @@
 		public static function autoload ( $class_name ) {
 			
 			$class_file = strtolower( $class_name );
+
+			// if it's an exception, they're all in one file
+			if ( strpos( $class_file, 'aws_exception' ) === 0 ) {
+				$class_file = 'aws_exception';	// trim off the actual type of exception, basically
+			}
 			
 			// convert underscores to /
 			$class_file = str_replace( '_', '/', $class_file );

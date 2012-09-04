@@ -148,31 +148,43 @@
 
 			$requests = array();
 
-			foreach ( $puts as $put ) {
-				foreach ( $put as $table => $item ) {
-					if ( !isset( $requests[ $table ] ) ) {
-						$requests[ $table ] = array();
-					}
+			if ( !empty( $puts ) ) {
+				foreach ( $puts as $put ) {
+					foreach ( $put as $table => $item ) {
 
-					$requests[ $table ][] = array(
-						'PutRequest' => array(
-							'Item' => $item,
-						),
-					);
+						// remove any empty attributes, they aren't allowed
+						foreach ( $item as $k => $v ) {
+							if ( $v == null || reset( $v ) == null ) {
+								unset( $item[ $k ] );
+							}
+						}
+
+						if ( !isset( $requests[ $table ] ) ) {
+							$requests[ $table ] = array();
+						}
+
+						$requests[ $table ][] = array(
+							'PutRequest' => array(
+								'Item' => $item,
+							),
+						);
+					}
 				}
 			}
 
-			foreach ( $deletes as $delete ) {
-				foreach ( $delete as $table => $key ) {
-					if ( !isset( $requests[ $table ] ) ) {
-						$requests[ $table ] = array();
-					}
+			if ( !empty( $deletes ) ) {
+				foreach ( $deletes as $delete ) {
+					foreach ( $delete as $table => $key ) {
+						if ( !isset( $requests[ $table ] ) ) {
+							$requests[ $table ] = array();
+						}
 
-					$requests[ $table ][] = array(
-						'DeleteRequest' => array(
-							'Key' => $key,
-						),
-					);
+						$requests[ $table ][] = array(
+							'DeleteRequest' => array(
+								'Key' => $key,
+							),
+						);
+					}
 				}
 			}
 

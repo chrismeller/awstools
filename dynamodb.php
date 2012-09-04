@@ -91,6 +91,13 @@
 
 		public function put_item ( $table, $attributes, $return_values = 'NONE', $options = array() ) {
 
+			// remove any empty attributes, they aren't allowed
+			foreach ( $attributes as $k => $v ) {
+				if ( $v == null || reset( $v ) == null ) {
+					unset( $attributes[ $k ] );
+				}
+			}
+
 			$options['TableName'] = $table;
 			$options['Item'] = $attributes;
 			$options['ReturnValues'] = $return_values;

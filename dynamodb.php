@@ -72,6 +72,34 @@
 
 		}
 
+		public function scan ( $table, $filter = array(), $limit = null, $start_key = null, $count = false, $attributes = array(), $options = array() ) {
+
+			$options['TableName'] = $table;
+
+			if ( !empty( $filter ) ) {
+				$options['ScanFilter'] = $filter;
+			}
+
+			if ( $limit != null ) {
+				$options['Limit'] = $limit;
+			}
+
+			if ( $start_key != null ) {
+				$options['ExclusiveStartKey'] = $start_key;
+			}
+
+			$options['Count'] = $count;
+
+			if ( !empty( $attributes ) ) {
+				$options['AttributesToGet'] = $attributes;
+			}
+
+			$result = $this->request( 'Scan', $options );
+
+			return $result;
+
+		}
+
 		public function delete_item ( $table, $hash_key, $range_key = null, $expected = array(), $return_values = 'NONE', $options = array() ) {
 
 			$options['TableName'] = $table;
